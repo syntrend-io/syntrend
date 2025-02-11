@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://syntrend.github.io/"
+Homepage = "https://github.com/wsidl/syntrend"
 Repository = "https://github.com/wsidl/syntrend"
 Issues = "https://github.com/wsidl/syntrend/issues"
 
