@@ -1,4 +1,4 @@
-|project_title|
+Syntrend
 ===============
 
 Syntrend is a Python Package and Command Line tool for generating synthetic data to express very specific behaviours and trends across multiple inputs.

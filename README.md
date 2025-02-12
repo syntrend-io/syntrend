@@ -78,4 +78,4 @@ Specific objectives for this project is to:
 
 ## Contibuting
 
-see [CONTRIBUTING](docs/contributing.rst) documentation
+see [CONTRIBUTING](docs/contributing.md) documentation

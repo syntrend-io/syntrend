@@ -4,8 +4,10 @@ import numpy as np
 import sys
 from typing import Callable
 from functools import partial
+from pathlib import Path
 
 T_IMG = tuple[float, float, float]
+OUT_PATH = Path.cwd().joinpath('docs', 'assets')
 
 
 def smooth1d(x, window_len):
@@ -105,7 +107,8 @@ def draw_plot():
     pl_dist = fig.add_subplot(grid_spec[0, 0], sharey=pl_trend)
     draw_value_diagram(pl_trend)
     draw_distribution_graph(pl_dist)
-    fig.show()
+    fig.savefig(OUT_PATH.joinpath(f'distribution_graph_{GRAPH_TYPE}.png'))
+    # fig.show()
 
 
 def none():
@@ -124,9 +127,9 @@ def std_dev():
     global GRAPH_TYPE
     GRAPH_TYPE = 'std_dev'
     draw_plot()
-#
-#
-# if __name__ == '__main__':
-#     print("Plot Call", sys.argv)
-#     cmd, GRAPH_TYPE = sys.argv
-#     draw_plot()
+
+
+if __name__ == '__main__':
+    print("Plot Call", sys.argv)
+    cmd, GRAPH_TYPE = sys.argv
+    draw_plot()
