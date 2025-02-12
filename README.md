@@ -72,10 +72,11 @@ Specific objectives for this project is to:
 
 ## Next Steps
 
-- Become familiar with Project File structure
+- Become familiar with [Project File structure](docs/project_file.md)
+- Review the [types of data](generators.md) that can be created randomly
+- Understand how to use [Expressions](docs/expressions.md) to define trends in specific properties across a project.
 - Understand how data can be formatted and produced to output
-- Explore some use cases
 
-## Contibuting
+## Contributing
 
 see [CONTRIBUTING](docs/contributing.md) documentation
