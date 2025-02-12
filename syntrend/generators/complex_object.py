@@ -1,4 +1,5 @@
 from syntrend.generators import register, PropertyGenerator, get_generator
+from syntrend.config.model import PropertyDefinition
 
 from random import randint
 
@@ -12,7 +13,23 @@ class BaseComplexGenerator(PropertyGenerator):
 
 @register
 class UnionGeneratorBase(BaseComplexGenerator):
-    """Generates a single value based on a random selection of many provided generator options"""
+    """Generates a single value based on a random selection of many provided generator options
+
+    Args:
+        items (list[`:obj:PropertyGenerator`]): List of generator types with their own properties
+
+    Example:
+        Selectively choose a generator randomly or through the use of an expression::
+
+            type: union
+            items:
+                - type: integer
+                  min_offset: -4
+                  max_offset: 4
+                - type: integer
+                  min_offset: 10
+                  max_offset: 20
+    """
 
     name = 'union'
 
@@ -22,7 +39,7 @@ class UnionGeneratorBase(BaseComplexGenerator):
     def load_items(self, items: list[any]) -> list[any]:
         _gens = []
         for item in items:
-            _gens.append(get_generator(self.kwargs.path, item, self.root_manager))
+            _gens.append(get_generator(self.root_object, PropertyDefinition(**item), self.root_manager))
         return _gens
 
     def generate(self) -> any:
@@ -40,7 +57,7 @@ class ListGeneratorBase(BaseComplexGenerator):
     }
 
     def get_children(self):
-        return [f'[{idx}]' for idx in range(len(self.items))]
+        return []
 
     def load_kwargs(self, kwargs):
         kwargs['min_length'] = int(kwargs['min_length'])
@@ -53,12 +70,13 @@ class ListGeneratorBase(BaseComplexGenerator):
             'sub_type' in kwargs
         ), "Must provide a 'sub_type' property for the values to be generated"
         kwargs['sub_type'] = get_generator(
-            self.root_object, kwargs['sub_type'], self.root_manager
+            self.root_object, PropertyDefinition(**kwargs['sub_type']), self.root_manager
         )
+        return kwargs
 
     def generate(self) -> list[any]:
         return [
-            self.kwargs.sub_type.render()
+            self.kwargs.sub_type.generate()
             for _ in range(randint(self.kwargs.min_length, self.kwargs.max_length))
         ]
 
