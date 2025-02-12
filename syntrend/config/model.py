@@ -7,6 +7,7 @@ from enum import Enum
 from os import getenv
 from pathlib import Path
 from functools import partial
+from copy import deepcopy
 
 LOG = logging.getLogger(__name__)
 DEFAULT_ENV_VAR_PREFIX = 'SYNTREND_'
@@ -62,8 +63,10 @@ class Validated:
           `parse_<field.name>(self, value) -> any`
         """
         kwargs.update(kwargs.pop('kwargs', {}))
-        self.source__ = kwargs.copy()
+        self.source__ = deepcopy(kwargs)
         for field in fields(self, include_field=True):
+            if field.name.endswith('_'):
+                continue
             default_val = NULL_VAL
             if field.default is not dc.MISSING:
                 default_val = field.default
@@ -398,7 +401,16 @@ class ProjectConfig(Validated):
     def parse_objects(self, objects):
         if len(objects) == 0:
             raise ValueError('Project Config must include one object to generate', {})
+        root_output = self.source__.get('output', {})
+        output_configs = {}
+        for object_name in objects:
+            output_configs[object_name] = deepcopy(root_output)
+            output_configs[object_name].update(objects[object_name].pop('output', {}))
         return {
-            obj_name: ObjectDefinition(name=obj_name, **objects[obj_name])
-            for obj_name in objects
+            object_name: ObjectDefinition(
+                name=object_name,
+                output=output_configs[object_name],
+                **objects[object_name],
+            )
+            for object_name in objects
         }

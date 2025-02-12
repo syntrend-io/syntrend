@@ -43,7 +43,7 @@ def retrieve_source(
 
     try:
         for doc in yaml.load_all(content):
-            yield doc
+            yield parse_object(doc)
     except error.YAMLError as err:
         raise ValueError(
             f'Invalid content format provided for parsing - {type(err).__name__}: {err.args}',
