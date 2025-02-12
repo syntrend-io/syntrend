@@ -146,6 +146,8 @@ def _load_generator_dir(module_name: str, directory: Path):
 
 def load_generators():
     _load_generator_dir('syntrend.generators', Path(__file__).parent)
+    if not CONFIG.config.generator_dir:
+        return
     add_generator_pkg = Path(CONFIG.config.generator_dir).absolute()
     if not (add_generator_pkg.is_dir() and add_generator_pkg.exists()):
         return

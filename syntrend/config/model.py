@@ -198,6 +198,10 @@ class ModuleConfig(Validated):
         default=getenv(f'{DEFAULT_ENV_VAR_PREFIX}_GENERATOR_DIR', '')
     )
     """Source Directory of Custom Generators"""
+    formatter_dir: str = dc.field(
+        default=getenv(f'{DEFAULT_ENV_VAR_PREFIX}_FORMATTERS_DIR', '')
+    )
+    """Source Directory of Custome Formatters"""
 
     parse_max_generator_retries = parse_int(_min=1)
     parse_max_historian_buffer = parse_int(_min=1)

@@ -51,6 +51,7 @@ Configuration Properties to modify/alter how the `syntrend` utility behaves
 * **max_generator_retries**: Maximum number of retries a Generator can perform before failing (default: 20)
 * **max_historian_buffer**: Maximum values to be kept in a buffer of previous values (default: 20)
 * **generator_dir**: Source Directory of Custom Generators for the project
+* **formatter_dir**: Source Directory of Custom Formatters for the project
 
 ## Object Definitions
 
@@ -100,3 +101,4 @@ Distributions are one of:
 * **SYNTREND_MAX_GENERATOR_RETRIES**: Sets value for `max_generator_retries` in the Project-level [Module Config](#module-config).
 * **SYNTREND_MAX_HISTORIAN_BUFFER**: Sets value for `max_historian_buffer` in the Project-level [Module Config](#module-config).
 * **SYNTREND_GENERATOR_DIR**: Sets value for `generator_dir` in the Project-level [Module Config](#module-config)
+* **SYNTREND_FORMATTER_DIR**: Sets value for `formatter_dir` in the Project-level [Module Config](#module-config)

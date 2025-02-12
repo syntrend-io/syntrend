@@ -130,7 +130,9 @@ def _load_formatter_dir(module_name: str, directory: Path):
 
 def load_formatters():
     _load_formatter_dir('syntrend.formatters', Path(__file__).parent)
-    add_formatter_pkg = Path(CONFIG.config.generator_dir).absolute()
+    if not CONFIG.config.formatter_dir:
+        return
+    add_formatter_pkg = Path(CONFIG.config.formatter_dir).absolute()
     if not (add_formatter_pkg.is_dir() and add_formatter_pkg.exists()):
         return
     formatter_pkg_name = add_formatter_pkg.name
