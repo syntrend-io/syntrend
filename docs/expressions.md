@@ -19,7 +19,7 @@ Provided variables to all expressions
 |:------------------|---------------------------------------------------------------------------------------------------------|
 | **new**           | a randomly-generated value based on the generator type before applying the expression                   |
 | **interval**      | a zero-indexed (starts at 0) counter of the object instance being generated within a sequence           |
-| **(object name)** | The named-reference of the Object to refer. More information in [Object References](#Object_References) |
+| **(object name)** | The named-reference of the Object to refer. More information in [Object References](#object-references) |
 | **pi**            | Mathematical `pi`                                                                                       |
 
 ### Object References

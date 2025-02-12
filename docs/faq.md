@@ -24,5 +24,3 @@ Please do contribute additional questions you would like answered.
   This would be easy to implement but thinking about the target audience and how the project files would be maintained, readability and repeatability was a main concern. JSON struggles with these as it's primarily an exchange format.
 
   YAML has the benefit of being highly human-readable with native support for anchors to re-use portions across multiple locations in a project.
-
-* 

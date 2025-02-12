@@ -58,7 +58,6 @@ Configuration Properties to modify/alter how the `syntrend` utility behaves
 
 Definition of how a value is generated and any associated properties to modify its behaviour
 
-* **name**: 
 * **type**: Generator Type to be used for this Property Definition
 * **distribution**: Property to define how the generated values will vary using a [Distribution Type](#distribution-Types). Defaults to "none" (defined as a [Property Distribution](#property-distribution)).
 * **expression**: String Expression to define a trend, behaviour, or conditions to apply.
