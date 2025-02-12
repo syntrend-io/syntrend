@@ -70,7 +70,9 @@ class TempHandler(writers.OutputHandler):
 
 def register_formatter(format_name: str):
     if format_name in FORMATTERS:
-        raise NameError('Formatter is already registered', {'Formatter Name': format_name})
+        raise NameError(
+            'Formatter is already registered', {'Formatter Name': format_name}
+        )
 
     def _register_formatter(func: T_Formatter):
         FORMATTERS[format_name] = func

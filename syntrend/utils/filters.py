@@ -23,7 +23,11 @@ def to_timestamp(value: datetime.datetime):
 
 
 def to_datetime(value_string, format_str: str = None):
-    for formatter in [datetime.datetime.fromisoformat, datetime.date.fromisoformat, datetime.time.fromisoformat]:
+    for formatter in [
+        datetime.datetime.fromisoformat,
+        datetime.date.fromisoformat,
+        datetime.time.fromisoformat,
+    ]:
         try:
             return formatter(value_string)
         except (TypeError, ValueError) as e:

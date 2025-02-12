@@ -7,9 +7,9 @@ from pytest import mark
 @mark.docs
 def test_single_value_string(project_result):
     assert project_result.exit_code == 0, 'Command should complete successfully'
-    assert (
-        10 <= len(project_result.output.splitlines()[0].strip()) <= 12
-    ), 'Length of string should be 8 - 10 chars long (plus quotes)'
+    assert 10 <= len(project_result.output.splitlines()[0].strip()) <= 12, (
+        'Length of string should be 8 - 10 chars long (plus quotes)'
+    )
 
 
 @mark.docs
@@ -37,13 +37,13 @@ def test_random_choice(project_result):
 def test_single_value_object(project_result):
     if project_result.exit_code:
         traceback.print_tb(project_result.exc_info[2])
-    assert (
-        project_result.exit_code == 0
-    ), f'Command Errored: {project_result.exception}\n{traceback.print_stack(project_result.exc_info)}'
+    assert project_result.exit_code == 0, (
+        f'Command Errored: {project_result.exception}\n{traceback.print_stack(project_result.exc_info)}'
+    )
     gen_obj = json.loads(project_result.output)
-    assert isinstance(
-        gen_obj, dict
-    ), f'Expecting dict but got {type(gen_obj).__name__} instead'
+    assert isinstance(gen_obj, dict), (
+        f'Expecting dict but got {type(gen_obj).__name__} instead'
+    )
     assert len(gen_obj) == 4, 'Each object should have 3 properties'
     assert 'field_1' in gen_obj, "'field_1' should be an object in both sets"
     assert isinstance(gen_obj['field_1'], str)
@@ -114,12 +114,12 @@ def test_cond_status_change(project_result):
         ranges[ev['sensor'] > 5].append(ev)
     assert len(below) > 1
     assert len(above) > 1
-    assert all(
-        [ev['status'] == 'below' for ev in below]
-    ), "Status should report 'below' when Sensor value is less than 6"
-    assert all(
-        [ev['status'] == 'above' for ev in above]
-    ), "Status should report 'above' when sensor value is greater than 5"
+    assert all([ev['status'] == 'below' for ev in below]), (
+        "Status should report 'below' when Sensor value is less than 6"
+    )
+    assert all([ev['status'] == 'above' for ev in above]), (
+        "Status should report 'above' when sensor value is greater than 5"
+    )
 
 
 @mark.docs

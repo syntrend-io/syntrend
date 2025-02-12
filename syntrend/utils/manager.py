@@ -40,7 +40,7 @@ class SeriesManager:
                     {
                         'Property': prop_generator.config.name,
                         'Missing Field': field,
-                    }
+                    },
                 ) from None
             except exceptions.TemplateError as e:
                 raise ValueError('Expression failed to execute', *e.args) from None

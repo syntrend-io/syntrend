@@ -39,7 +39,11 @@ class UnionGeneratorBase(BaseComplexGenerator):
     def load_items(self, items: list[any]) -> list[any]:
         _gens = []
         for item in items:
-            _gens.append(get_generator(self.root_object, PropertyDefinition(**item), self.root_manager))
+            _gens.append(
+                get_generator(
+                    self.root_object, PropertyDefinition(**item), self.root_manager
+                )
+            )
         return _gens
 
     def generate(self) -> any:
@@ -62,15 +66,17 @@ class ListGeneratorBase(BaseComplexGenerator):
     def load_kwargs(self, kwargs):
         kwargs['min_length'] = int(kwargs['min_length'])
         kwargs['max_length'] = int(kwargs['max_length'])
-        assert (
-            kwargs['min_length'] <= kwargs['max_length']
-        ), 'Min must be less than or equal to Max'
+        assert kwargs['min_length'] <= kwargs['max_length'], (
+            'Min must be less than or equal to Max'
+        )
         assert kwargs['min_length'] >= 0, 'List cannot have a negative length'
-        assert (
-            'sub_type' in kwargs
-        ), "Must provide a 'sub_type' property for the values to be generated"
+        assert 'sub_type' in kwargs, (
+            "Must provide a 'sub_type' property for the values to be generated"
+        )
         kwargs['sub_type'] = get_generator(
-            self.root_object, PropertyDefinition(**kwargs['sub_type']), self.root_manager
+            self.root_object,
+            PropertyDefinition(**kwargs['sub_type']),
+            self.root_manager,
         )
         return kwargs
 

@@ -18,6 +18,7 @@ class ChoiceGenerator(PropertyGenerator):
                 - 155
                 - [a, list, of, 166, 215, numbers]
     """
+
     name = 'choice'
 
     def validate(self):

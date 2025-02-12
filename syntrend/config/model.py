@@ -123,7 +123,7 @@ def update(obj: Validated, other: Validated) -> None:
             {
                 'Original Object Type': type(obj).__name__,
                 'Other Object Type': type(other).__name__,
-            }
+            },
         )
 
     for field in fields(obj):
@@ -156,7 +156,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Input Value Type': type(value).__name__,
-                }
+                },
             ) from None
         if _min is not None and value < _min:
             raise ValueError(
@@ -164,7 +164,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Minimum': _min,
-                }
+                },
             )
         if _max is not None and value > _max:
             raise ValueError(
@@ -172,7 +172,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Maximum': _max,
-                }
+                },
             )
         return value
 
@@ -212,7 +212,7 @@ class ModuleConfig(Validated):
                 {
                     'Input Path': value,
                     'Parsed Path': str(parsed_path),
-                }
+                },
             )
         return parsed_path
 
@@ -274,6 +274,7 @@ class PropertyDistribution(Validated):
         min_offset (:obj:`float`, optional): The minimum offset of the distribution
         max_offset (:obj:`float`, optional): The maximum offset of the distribution
     """
+
     type: DistributionTypes = DistributionTypes.NoDistribution
     std_dev: float = 0.0
     min_offset: Union[int, float] = 0
@@ -291,7 +292,7 @@ class PropertyDistribution(Validated):
                 {
                     'Minimum Value': self.min_offset,
                     'Maximum Value': self.max_offset,
-                }
+                },
             )
 
 
@@ -313,6 +314,7 @@ class PropertyDefinition(Validated):
         items (:obj:`list`): List of items required for Generator Types needing a list of objects to choose from.
         properties (:obj:`dict[str, PropertyDefinition]`): Mapping of sub properties namely to support nested objects.
     """
+
     name: str
     type: str
     distribution: Union[DistributionTypes, PropertyDistribution] = dc.field(
@@ -358,6 +360,7 @@ class ObjectDefinition(PropertyDefinition):
     Attributes:
         output (:obj:`OutputConfig`): Properties to define how and where results are generated
     """
+
     output: OutputConfig = dc.field(default_factory=OutputConfig)
 
     def parse_output(self, value):
