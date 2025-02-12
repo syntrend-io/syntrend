@@ -1,6 +1,6 @@
 from syntrend.config import CONFIG
 from syntrend.generators import get_generator, PropertyGenerator
-from syntrend.utils import historian, filters, exc
+from syntrend.utils import historian, filters
 from syntrend.formatters import load_formatter
 
 from jinja2 import Environment, BaseLoader, exceptions

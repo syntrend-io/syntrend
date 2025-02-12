@@ -42,11 +42,11 @@ def gaussian_filter(sigma: float, alpha: float = 0.5, color: T_IMG = (0., 0., 0.
 
 
 def apply_gaussian_blur(plot: plt.Axes, sigma: float, alpha: float, **kwargs):
-    l, = plot.get_lines()
-    yy = l.get_ydata()
+    lines, = plot.get_lines()
+    yy = lines.get_ydata()
     gauss = gaussian_filter(sigma=sigma, alpha=alpha, color=colors.to_rgb(kwargs['color']))
-    line, = plot.plot(l.get_xdata(), yy)
-    line.update_from(l)
+    line, = plot.plot(lines.get_xdata(), yy)
+    line.update_from(lines)
     line.set_agg_filter(gauss)
     line.set_rasterized(True)
     line.update(kwargs)
@@ -77,7 +77,7 @@ def draw_value_diagram(plot: plt.Axes):
     trend_line, = plot.plot(X, X_TREND, color='blue', label='Trend Expression')
     dist_area = AREA[GRAPH_TYPE](plot)
     if dist_area:
-        r = dist_area(label='Area of Distribution', color=trend_line.get_color())
+        dist_area(label='Area of Distribution', color=trend_line.get_color())
     plot.plot(X, values, 'o', color='green', label='Generated Values')
     plot.set_ylim((-5, 15))
     plot.legend(loc='best', fancybox=True)
