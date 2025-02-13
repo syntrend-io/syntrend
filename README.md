@@ -63,7 +63,7 @@ Specific objectives for this project is to:
     if using Docker:
 
     ```shell
-    docker run -v $(pwd)/project_file.yaml:/project/project_file.yaml -w /project ghcr.io/wsidl/syntrend:latest generate project_file.yaml
+    docker run -v $(pwd):/project -w /project ghcr.io/wsidl/syntrend:latest generate project_file.yaml
     ```
 
 4. Handle the data
