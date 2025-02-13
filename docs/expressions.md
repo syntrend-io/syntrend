@@ -93,11 +93,11 @@ e.g. `interval * 10 / pi | sin * 5 + 2` will pipe the result of the arithmetic a
 
 ### Math Filters
 
-| Filter      | Description                                                                                       |
-|-------------|---------------------------------------------------------------------------------------------------|
-| **sin**     | Produces the Sine of a value given in Radians (see example in the note under [Filters](#Filters)) |
-| **cos**     | Produces the Cosine of a value given in Radians.                                                  |
-| **tan**     | Produces the Tangent of a value given in Radians.                                                 |
-| **degrees** | Translates a number from Radians to Degrees.                                                      |
-| **radians** | Translates a number from Degrees to Radians.                                                      |
-| **random**  | Generates a random, floating-point number from 0 to 1 (inclusive)                                 |
+| Filter      | Description                                                                                                          |
+|-------------|----------------------------------------------------------------------------------------------------------------------|
+| **sin**     | Produces the Sine of a value given in Radians (see example in the note under [Filters](#Filters))                    |
+| **cos**     | Produces the Cosine of a value given in Radians.                                                                     |
+| **tan**     | Produces the Tangent of a value given in Radians.                                                                    |
+| **degrees** | Translates a number from Radians to Degrees.                                                                         |
+| **radians** | Translates a number from Degrees to Radians.                                                                         |
+| **random**  | Provides access to Python's `random.randint` method giving a lower- and upper-bound for a random number (inclusive). |
