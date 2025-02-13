@@ -23,7 +23,11 @@ def to_timestamp(value: datetime.datetime):
 
 
 def to_datetime(value_string, format_str: str = None):
-    for formatter in [datetime.datetime.fromisoformat, datetime.date.fromisoformat, datetime.time.fromisoformat]:
+    for formatter in [
+        datetime.datetime.fromisoformat,
+        datetime.date.fromisoformat,
+        datetime.time.fromisoformat,
+    ]:
         try:
             return formatter(value_string)
         except (TypeError, ValueError) as e:
@@ -98,8 +102,7 @@ def load_environment(manager: 'SeriesManager'):
         tan=math.tan,
         degrees=math.degrees,
         radians=math.radians,
-        random=random.random,
-        pi=math.pi,
+        random=random.randint,
     )
     manager.expression_env.filters.update(
         to_timestamp=to_timestamp,

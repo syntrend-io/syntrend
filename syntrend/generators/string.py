@@ -34,6 +34,7 @@ class StringGenerator(PropertyGenerator):
                     - is big
 
     """
+
     name = 'string'
     type = str
     default_config = {
@@ -88,9 +89,9 @@ class HexGenerator(StringGenerator):
         return kwargs
 
     def validate(self):
-        assert (
-            self.kwargs.min_length <= self.kwargs.max_length
-        ), 'Min Length must be less than or equal to Max Length'
+        assert self.kwargs.min_length <= self.kwargs.max_length, (
+            'Min Length must be less than or equal to Max Length'
+        )
         assert self.kwargs.char_length >= 0, 'Cannot generate string from an empty list'
 
     def generate(self):

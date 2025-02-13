@@ -43,9 +43,9 @@ def test_linear_distribution_numeric(_type_str: str):
     )
     dist_func = d.get_distribution(prop_cfg.distribution)
     gen_values = [dist_func(5) for _ in range(30)]
-    assert all(
-        [0 <= x <= 10 for x in gen_values]
-    ), 'All Values must be within the current tolerance'
+    assert all([0 <= x <= 10 for x in gen_values]), (
+        'All Values must be within the current tolerance'
+    )
 
 
 @mark.unit
@@ -60,6 +60,6 @@ def test_std_dev_distribution(std_dev):
     offset = std_dev * 6
     dist_func = d.get_distribution(prop_cfg.distribution)
     gen_values = [dist_func(5) for _ in range(1000)]
-    assert (
-        min(gen_values) > 5 - offset and max(gen_values) < 5 + offset
-    ), 'All Values must be within the current tolerance'
+    assert min(gen_values) > 5 - offset and max(gen_values) < 5 + offset, (
+        'All Values must be within the current tolerance'
+    )

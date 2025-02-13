@@ -24,6 +24,7 @@ class PropertyGenerator:
         start: A Starting Value of any type. Necessary if building an expression using a previous value.
         expression (:obj:`str`): Parsable expression (using `Jinja <https://jinja.palletsprojects.com/en/3.1.x/>`__) used to generate expected values. More information in `Expressions Doc </expressions>`__)
     """
+
     type: Type = None
     name: str = ''
     default_config: dict[str, any] = {}
@@ -112,7 +113,7 @@ class PropertyGenerator:
 def register(property_generator: Type[PropertyGenerator]):
     assert property_generator.name, 'Property Generator must have a name specified'
     assert property_generator.name not in GENERATORS, (
-        f'Property Generator ' f"'{property_generator.name}' " f'already registered'
+        f"Property Generator '{property_generator.name}' already registered"
     )
     GENERATORS[property_generator.name] = load_type(property_generator)
     return property_generator
@@ -145,6 +146,8 @@ def _load_generator_dir(module_name: str, directory: Path):
 
 def load_generators():
     _load_generator_dir('syntrend.generators', Path(__file__).parent)
+    if not CONFIG.config.generator_dir:
+        return
     add_generator_pkg = Path(CONFIG.config.generator_dir).absolute()
     if not (add_generator_pkg.is_dir() and add_generator_pkg.exists()):
         return

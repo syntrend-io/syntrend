@@ -12,6 +12,7 @@ def dist_no_dist(_):
 
 def dist_linear(prop_dist: model.PropertyDistribution):
     scale = prop_dist.max_offset - prop_dist.min_offset
+
     def _generator(input_value):
         return input_value + random() * scale + prop_dist.min_offset
 

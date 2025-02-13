@@ -6,6 +6,7 @@ import re
 
 from ruamel.yaml import YAML, error
 
+yaml = YAML(typ='safe')
 RE_INCLUDE_REF = re.compile(r"^(.*?) ?(\d*)")
 CONFIG_MODULES = [
     model.ProjectConfig,
@@ -13,9 +14,7 @@ CONFIG_MODULES = [
     model.ModuleConfig,
 ]
 MODULE_KEYS = {}
-T_CONFIG_INPUT = list[dict] | dict | str | Path
 
-yaml = YAML(typ='safe')
 for module in CONFIG_MODULES:
     yaml.register_class(module)
     MODULE_KEYS[module] = set(model.fields(module))
@@ -29,13 +28,15 @@ def parse_object(config_dict: dict) -> Union[dict, model.Validated]:
     return config_dict
 
 
-def retrieve_source(config_file: T_CONFIG_INPUT) -> Generator[dict[str, Any], None, None]:
+def retrieve_source(
+    config_file: Union[list[dict], dict, str, Path],
+) -> Generator[dict[str, Any], None, None]:
     if isinstance(config_file, list):
         for inner_dict in config_file:
-            yield inner_dict
+            yield parse_object(inner_dict)
         return
     if isinstance(config_file, dict):
-        yield config_file
+        yield parse_object(config_file)
         return
 
     content = config_file
@@ -45,18 +46,17 @@ def retrieve_source(config_file: T_CONFIG_INPUT) -> Generator[dict[str, Any], No
 
     try:
         for doc in yaml.load_all(content):
-            yield doc
+            yield parse_object(doc)
     except error.YAMLError as err:
         raise ValueError(
             f'Invalid content format provided for parsing - {type(err).__name__}: {err.args}',
-            {"File Header": content[:20]}
+            {'File Header': content[:20]},
         ) from None
 
 
 def load_config(config_file: Union[dict, str, Path]) -> model.ProjectConfig:
     new_config = model.ProjectConfig(objects={'test': {'type': 'string'}})
-    for config_dict in retrieve_source(config_file):
-        config_obj = parse_object(config_dict)
+    for config_obj in retrieve_source(config_file):
         if isinstance(config_obj, model.ProjectConfig):
             new_config = config_obj
         elif isinstance(config_obj, model.OutputConfig):
@@ -73,7 +73,7 @@ def load_config(config_file: Union[dict, str, Path]) -> model.ProjectConfig:
         else:
             raise ValueError(
                 f'Unhandled Configuration Type: {repr(config_obj)}',
-                {'Config Object Type': type(config_obj).__name__}
+                {'Config Object Type': type(config_obj).__name__},
             )
     return new_config
 

@@ -1,7 +1,9 @@
 from syntrend.utils import exc
+from pytest import mark
 from os import linesep
 
 
+@mark.unit
 def test_exception_output(monkeypatch):
     reported_exception = [0]
     reported_output = ['']
@@ -14,12 +16,12 @@ def test_exception_output(monkeypatch):
 
     monkeypatch.setattr(exc.sys, 'exit', _exit_code)
     monkeypatch.setattr(exc.sys.stderr, 'write', _error_output)
-    err = ValueError('Failed Expression', {"a": 1, "b": 2, "c": 3})
+    err = ValueError('Failed Expression', {'a': 1, 'b': 2, 'c': 3})
     exc.process_exception(err)
 
-    assert (
-        reported_exception[0] == 1
-    ), 'Reported error exit code should be 2 (Expression Error)'
+    assert reported_exception[0] == 1, (
+        'Reported error exit code should be 2 (Expression Error)'
+    )
     assert (
         reported_output[0]
         == linesep.join(

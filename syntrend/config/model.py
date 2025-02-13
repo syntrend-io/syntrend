@@ -7,6 +7,7 @@ from enum import Enum
 from os import getenv
 from pathlib import Path
 from functools import partial
+from copy import deepcopy
 
 LOG = logging.getLogger(__name__)
 DEFAULT_ENV_VAR_PREFIX = 'SYNTREND_'
@@ -62,8 +63,10 @@ class Validated:
           `parse_<field.name>(self, value) -> any`
         """
         kwargs.update(kwargs.pop('kwargs', {}))
-        self.source__ = kwargs.copy()
+        self.source__ = deepcopy(kwargs)
         for field in fields(self, include_field=True):
+            if field.name.endswith('_'):
+                continue
             default_val = NULL_VAL
             if field.default is not dc.MISSING:
                 default_val = field.default
@@ -123,7 +126,7 @@ def update(obj: Validated, other: Validated) -> None:
             {
                 'Original Object Type': type(obj).__name__,
                 'Other Object Type': type(other).__name__,
-            }
+            },
         )
 
     for field in fields(obj):
@@ -156,7 +159,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Input Value Type': type(value).__name__,
-                }
+                },
             ) from None
         if _min is not None and value < _min:
             raise ValueError(
@@ -164,7 +167,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Minimum': _min,
-                }
+                },
             )
         if _max is not None and value > _max:
             raise ValueError(
@@ -172,7 +175,7 @@ def parse_int(_min: Optional[int] = None, _max: Optional[int] = None):
                 {
                     'Input Value': str(value),
                     'Maximum': _max,
-                }
+                },
             )
         return value
 
@@ -195,6 +198,10 @@ class ModuleConfig(Validated):
         default=getenv(f'{DEFAULT_ENV_VAR_PREFIX}_GENERATOR_DIR', '')
     )
     """Source Directory of Custom Generators"""
+    formatter_dir: str = dc.field(
+        default=getenv(f'{DEFAULT_ENV_VAR_PREFIX}_FORMATTERS_DIR', '')
+    )
+    """Source Directory of Custome Formatters"""
 
     parse_max_generator_retries = parse_int(_min=1)
     parse_max_historian_buffer = parse_int(_min=1)
@@ -212,7 +219,7 @@ class ModuleConfig(Validated):
                 {
                     'Input Path': value,
                     'Parsed Path': str(parsed_path),
-                }
+                },
             )
         return parsed_path
 
@@ -274,6 +281,7 @@ class PropertyDistribution(Validated):
         min_offset (:obj:`float`, optional): The minimum offset of the distribution
         max_offset (:obj:`float`, optional): The maximum offset of the distribution
     """
+
     type: DistributionTypes = DistributionTypes.NoDistribution
     std_dev: float = 0.0
     min_offset: Union[int, float] = 0
@@ -291,7 +299,7 @@ class PropertyDistribution(Validated):
                 {
                     'Minimum Value': self.min_offset,
                     'Maximum Value': self.max_offset,
-                }
+                },
             )
 
 
@@ -313,6 +321,7 @@ class PropertyDefinition(Validated):
         items (:obj:`list`): List of items required for Generator Types needing a list of objects to choose from.
         properties (:obj:`dict[str, PropertyDefinition]`): Mapping of sub properties namely to support nested objects.
     """
+
     name: str
     type: str
     distribution: Union[DistributionTypes, PropertyDistribution] = dc.field(
@@ -358,6 +367,7 @@ class ObjectDefinition(PropertyDefinition):
     Attributes:
         output (:obj:`OutputConfig`): Properties to define how and where results are generated
     """
+
     output: OutputConfig = dc.field(default_factory=OutputConfig)
 
     def parse_output(self, value):
@@ -395,7 +405,16 @@ class ProjectConfig(Validated):
     def parse_objects(self, objects):
         if len(objects) == 0:
             raise ValueError('Project Config must include one object to generate', {})
+        root_output = self.source__.get('output', {})
+        output_configs = {}
+        for object_name in objects:
+            output_configs[object_name] = deepcopy(root_output)
+            output_configs[object_name].update(objects[object_name].pop('output', {}))
         return {
-            obj_name: ObjectDefinition(name=obj_name, **objects[obj_name])
-            for obj_name in objects
+            object_name: ObjectDefinition(
+                name=object_name,
+                output=output_configs[object_name],
+                **objects[object_name],
+            )
+            for object_name in objects
         }
