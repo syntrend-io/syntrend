@@ -2,16 +2,19 @@ from syntrend.config import model
 
 from typing import Union, Generator, Any
 from pathlib import Path
+import re
 
 from ruamel.yaml import YAML, error
 
 yaml = YAML(typ='safe')
+RE_INCLUDE_REF = re.compile(r"^(.*?) ?(\d*)")
 CONFIG_MODULES = [
     model.ProjectConfig,
     model.OutputConfig,
     model.ModuleConfig,
 ]
 MODULE_KEYS = {}
+
 for module in CONFIG_MODULES:
     yaml.register_class(module)
     MODULE_KEYS[module] = set(model.fields(module))
@@ -73,3 +76,29 @@ def load_config(config_file: Union[dict, str, Path]) -> model.ProjectConfig:
                 {'Config Object Type': type(config_obj).__name__},
             )
     return new_config
+
+
+def yaml_include(loader, node):
+    if not (match := RE_INCLUDE_REF.fullmatch(node.value)):
+        raise ValueError(
+            'Invalid "!include" reference',
+            {
+                "Value": node.value
+            }
+        )
+    path_ref, index = match.groups()
+    y = loader.loader
+    _yaml = YAML(typ=y.typ, pure=y.pure)  # same values as including YAML
+    _yaml.composer.anchors = loader.composer.anchors
+    if not index:
+        index = 0
+    index = int(index)
+    count = 0
+    for doc in retrieve_source(Path(path_ref)):
+        if count == index:
+            return doc
+        count += 1
+
+
+yaml.Constructor.add_constructor('!include', yaml_include)
+# TODO(ws): Test include constructor
