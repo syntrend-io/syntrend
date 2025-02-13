@@ -73,10 +73,10 @@ Specific objectives for this project is to:
 ## Next Steps
 
 - Become familiar with [Project File structure](docs/project_file.md)
-- Review the [types of data](docs/generators.md) that can be created randomly
+- Review the [types of data generators](docs/generators.md) that can create and parse values for the dataset
 - Understand how to use [Expressions](docs/expressions.md) to define trends in specific properties across a project.
 - Apply controlled randomness within your data using [Value Distributions](docs/distributions.md)
-- Understand how data can be formatted and produced to output
+- Understand how data can be [formatted or provide custom outputs](docs/outputs.md)
 - Read the [FAQ's](docs/faq.md) for any un-answered questions
 
 ## Contributing
