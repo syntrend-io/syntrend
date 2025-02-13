@@ -1,7 +1,9 @@
 from syntrend.utils import exc
+from pytest import mark
 from os import linesep
 
 
+@mark.unit
 def test_exception_output(monkeypatch):
     reported_exception = [0]
     reported_output = ['']

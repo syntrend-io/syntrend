@@ -1,7 +1,7 @@
 from syntrend.config import CONFIG
 from syntrend.formatters import register_formatter, Collection
 
-SQL_INSERT_FORMAT = 'insert into {table} ({columns}) values ({values})'
+SQL_INSERT_FORMAT = 'insert into {table} ({columns}) values ({values});'
 
 
 @register_formatter('sql')
