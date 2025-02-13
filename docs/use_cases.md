@@ -1,10 +1,6 @@
 # Common Use Cases for Synthetic Trend Data Generation
 
-<<<<<<<< HEAD:docs/use_cases.rst
-|project_title| is intended to be highly configurable to support a range of use cases.
-========
 Syntrend is intended to be highly configurable to support a range of use cases.
->>>>>>>> release/0.2.0:docs/use_cases.md
 Some use cases are intuitive to support while others require some creativity to provide the
 intended outcome.
 
