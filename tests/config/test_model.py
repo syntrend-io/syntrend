@@ -15,8 +15,8 @@ def test_parse_int(value, _min, _max):
 @mark.parametrize(
     'value,_min,_max,_error_type,_error',
     [
-        (0, 1, 2, ValueError, 'Value must be >= 1'),
-        (4, 0, 2, ValueError, 'Value must be <= 2'),
+        (0, 1, 2, ValueError, 'Provided value is less than the minimum allowed'),
+        (4, 0, 2, ValueError, 'Provided value is greater than the maximum allowed'),
         ({}, 4, 2, TypeError, 'Value must be parsable to integer'),
     ],
 )
@@ -25,6 +25,7 @@ def test_parse_int_errors(value, _min, _max, _error_type, _error):
     with raises(_error_type) as exc:
         callback(None, value)
     assert exc.value.args[0] == _error
+    assert exc.value.args[1]['Input Value'] == str(value)
 
 
 @mark.unit
@@ -69,6 +70,6 @@ def test_module_config_bad_dir():
 def test_project_config_invalid_type():
     with raises(TypeError) as exc:
         model.ModuleConfig(max_generator_retries=[])
-    assert (
-        exc.value.args[0] == 'Value must be parsable to integer'
-    ), 'TypeError message should match output from module'
+    assert exc.value.args[0] == 'Value must be parsable to integer', (
+        'TypeError message should match output from module'
+    )

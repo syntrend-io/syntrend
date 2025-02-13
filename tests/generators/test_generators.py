@@ -20,9 +20,9 @@ def test_load_default_generator():
     prop_def = Prop_Def(type='string')
     str_gen = generators.get_generator('test', prop_def, None)
     exp_gen = string_gen.StringGenerator('test', base_def)
-    assert (
-        str_gen.__class__.__name__ == exp_gen.__class__.__name__
-    ), 'Load Generator should return the String Generator'
+    assert str_gen.__class__.__name__ == exp_gen.__class__.__name__, (
+        'Load Generator should return the String Generator'
+    )
 
 
 @generators.register
@@ -41,6 +41,6 @@ def test_register_generator():
         test_gen = generators.get_generator('test', prop_def, None)
     except KeyError:
         raise ValueError("Should have found a 'test' generator") from None
-    assert (
-        test_gen.__class__ == exp_gen.__class__
-    ), "Should have returned the 'test' generator"
+    assert test_gen.__class__ == exp_gen.__class__, (
+        "Should have returned the 'test' generator"
+    )

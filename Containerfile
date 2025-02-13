@@ -1,6 +1,7 @@
 FROM python:3.11-slim as python-base
 LABEL authors="wsiddall"
-ARG SYNTREND_VERSION="0.0.1"
+ARG SYNTREND_VERSION="1.0.0"
+LABEL org.opencontainers.image.source=https://github.com/wsidl/syntrend
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \

@@ -24,9 +24,9 @@ def test_single_object(project, monkeypatch):
     project(csv, {'type': 'object'})
     formatter = csv.csv_formatter('test')
     output = formatter(Collection(Event({'f1': 'string', 'f2': 10})))
-    assert (
-        output[0] == '"string",10'
-    ), 'Should generate an encoded csv string of multiple values'
+    assert output[0] == '"string",10', (
+        'Should generate an encoded csv string of multiple values'
+    )
 
 
 @mark.unit
@@ -40,12 +40,12 @@ def test_multiple_objects(project, monkeypatch):
             Event({'f1': 'string', 'f2': 10}),
         )
     )
-    assert (
-        output[0] == '"string",10'
-    ), 'Should generate an encoded csv string of multiple values'
-    assert (
-        len(output) == 4
-    ), 'Should generate 3 lines of csv output with an extra empty line'
+    assert output[0] == '"string",10', (
+        'Should generate an encoded csv string of multiple values'
+    )
+    assert len(output) == 4, (
+        'Should generate 3 lines of csv output with an extra empty line'
+    )
 
 
 @mark.unit
@@ -60,9 +60,9 @@ def test_multiple_objects_as_collection(project, monkeypatch):
         )
     )
     assert output[0] == '"f1","f2"', 'First line should include a header'
-    assert (
-        output[1] == '"string",10'
-    ), 'Should generate an encoded csv string of multiple values'
-    assert (
-        len(output) == 5
-    ), 'Should generate 4 lines of csv output with header, and an extra empty line'
+    assert output[1] == '"string",10', (
+        'Should generate an encoded csv string of multiple values'
+    )
+    assert len(output) == 5, (
+        'Should generate 4 lines of csv output with header, and an extra empty line'
+    )
