@@ -102,3 +102,65 @@ flowchart
 
 ### Merge to Main
 
+Repeats a lot of the some tests and functions done with PRs, but only focuses on production-readiness.
+
+> [!NOTE]
+> Objectives:
+> 
+> * includes unit/integration/end-to-end tests specific to the work being done
+> * ensures no breaking changes to existing capabilities
+> * can build a package and pushed to the target registries (as test builds)
+> * passes all tests (end-to-end tests all performed on both Wheel and Docker builds)
+
+```mermaid
+---
+title: Merge to Main
+---
+flowchart
+    trCommit([Merge to Main]) --> jbUnitTests[Unit Tests] & jbIntegrationTests[Integration Tests]
+    jbUnitTests & jbIntegrationTests --> jbReportCov[Code Coverage Report]
+    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
+    jbBuildWheel & jbBuildDocker--> jbEndTests[End-to-End Tests]
+    jbEndTests --> jbRegressionTests[Regression Tests]
+    jbRegressionTests --> jbPublish[Publish Packages to Test Registries]
+    jbPublish --> jbRemoveOldBuild[Remove old builds]
+    jbPublish -.->|User Task| uat[User Acceptance]
+```
+
+### Release Branch
+
+Taking the work merged into `main`, the release branch will focus on combining the cherry-picked features from `main` and preparing any documentation and release notes.
+
+
+
+Should include everything necessary for the changes are production ready and can be included in a release.
+
+> [!NOTE]
+> Objectives:
+> 
+> * includes unit/integration/end-to-end tests specific to the work being done
+> * ensures no breaking changes to existing capabilities
+> * ensures no breaking changes after a merge to main (through a temporary branch with both branches)
+> * can build a package and pushed to the target registries (as test builds)
+> * passes all tests (end-to-end tests all performed on both Wheel and Docker builds)
+
+```mermaid
+---
+title: Release Workflow
+---
+flowchart
+    trCommit([Release Commit]) --> jbVersion[Validates Version] 
+    jbVersion --> jbUnitTests[Unit Tests] & jbIntegrationTests[Integration Tests]
+    jbUnitTests & jbIntegrationTests --> jbReportCov[Code Coverage Report]
+    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
+    jbBuildWheel & jbBuildDocker--> jbEndTests[End-to-End Tests]
+    jbEndTests --> jbRegressionTests[Regression Tests]
+    jbRegressionTests --> taskIntervention([Workflow Pause])
+    taskIntervention --> jbPublish[Publish Packages to Registries]
+    jbPublish --> jbMergeMain[Merge to Main]
+```
+
+> [!NOTE]
+> The last task (Merge to Main) is completed so 
+> any bug fixes or corrections are made 
+> available for all future releases.
