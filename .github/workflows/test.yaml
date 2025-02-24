@@ -33,9 +33,9 @@ jobs:
         shell: bash
         run: uv sync --all-extras --no-install-project --frozen
       - name: Run Format Check
-        run: ruff format --check
+        run: uv run ruff format --check
       - name: Run Linter Check
-        run: ruff check
+        run: uv run ruff check
       - name: Get Change Type
         id: change_type
         run: |
