@@ -44,29 +44,53 @@ gitGraph
     merge release/vX
 ```
 
-## Branch Rules and Workflows
-
-### Work Edits (commits)
-
-Ensure no previously-require features/capabilities have been broken in the current work.
-
-> [!NOTE]
-> Objectives:
-> 
-> * be quick
-> * includes unit/integration tests specific to the work being done
-> * ensures no breaking changes to existing capabilities
-> * can build a package
-
 ```mermaid
 ---
-title: Commit Workflow
+title: Overall Workflow
 ---
 flowchart
-    trCommit([Commit Trigger]) --> jbNewUnitTest[Identify and Run Work-specific Unit Tests]
-    jbNewUnitTest --> jbUnitTests[Unit Tests]
-    jbUnitTests --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
+    classDef cond stroke-dasharray: 5 5
+    
+    trigger([Trigger])
+    jbNewUnitTests[Identify and Run Work-specific Unit Tests]:::cond
+    jbValVersion[ValidateVersion]:::cond
+    jbUnitTests[Unit Tests]
+    jbIntTests[Integration Tests]
+    jbRepCov[Coverage Report]
+    jbBuildWheel[Build Wheel]
+    jbBuildContainer[Build Container]
+    jbEndTests[End-to-End Tests]
+    jbRegTests[Regression Tests]
+    pause((pause))
+    jbPublishTest[To Test Registries]:::cond
+    jbRemOldBuilds[Remove Old Builds]:::cond
+    jbPublishProd[To Public Registries]:::cond
+    jbUAT[User Acceptance]
+    jbTempBranch[Create Test Branch for Merge]:::cond
+    jbMerge[Merge to Main]
+    workflowEnd([End])
+    
+    trigger -.->|for Main| jbUnitTests
+    trigger -.->|for PRs| jbNewUnitTests
+    trigger -.->|for Release| jbValVersion
+    jbNewUnitTests -.-> jbUnitTests
+    jbValVersion -.-> jbUnitTests
+    jbUnitTests --> jbIntTests
+    jbIntTests --> jbRepCov
+    jbRepCov --> jbBuildWheel
+    jbBuildWheel --> jbBuildContainer --> jbEndTests --> jbRegTests -.->|for PRs and Main| jbPublishTest
+    jbRegTests -.->|for Release| pause
+    pause -.-> jbPublishProd
+    pause -.-> jbUAT
+    jbPublishProd --> jbMerge
+    jbMerge --> workflowEnd
+    jbPublishTest -.-> jbRemOldBuilds --> workflowEnd
+    jbPublishTest -.-> jbUAT --> workflowEnd
+    jbPublishTest -.->|for PRs| jbTempBranch --> workflowEnd
+    
 ```
+
+## Branch Rules and Workflows
 
 ### Pull Requests
 
@@ -89,7 +113,7 @@ flowchart
     trCommit([PR Trigger]) --> jbNewUnitTest[Identify and Run Work-specific Tests]
     jbNewUnitTest --> jbUnitTests[Unit Tests] & jbIntegrationTests[Integration Tests]
     jbUnitTests & jbIntegrationTests --> jbReportCov[Code Coverage Report]
-    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
+    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildContainer[Build Container]
     jbBuildWheel & jbBuildDocker--> jbEndTests[End-to-End Tests]
     jbEndTests --> jbRegressionTests[Regression Tests]
     jbRegressionTests --> jbPublish[Publish Packages to Test Registries]
@@ -119,8 +143,8 @@ title: Merge to Main
 flowchart
     trCommit([Merge to Main]) --> jbUnitTests[Unit Tests] & jbIntegrationTests[Integration Tests]
     jbUnitTests & jbIntegrationTests --> jbReportCov[Code Coverage Report]
-    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
-    jbBuildWheel & jbBuildDocker--> jbEndTests[End-to-End Tests]
+    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildContainer[Build Container]
+    jbBuildWheel & jbBuildContainer--> jbEndTests[End-to-End Tests]
     jbEndTests --> jbRegressionTests[Regression Tests]
     jbRegressionTests --> jbPublish[Publish Packages to Test Registries]
     jbPublish --> jbRemoveOldBuild[Remove old builds]
@@ -143,7 +167,7 @@ Should include everything necessary for the changes are production ready and can
 > * ensures no breaking changes after a merge to main (through a temporary branch with both branches)
 > * can build a package and pushed to the target registries (as test builds)
 > * passes all tests (end-to-end tests all performed on both Wheel and Docker builds)
-
+                                 
 ```mermaid
 ---
 title: Release Workflow
@@ -152,8 +176,8 @@ flowchart
     trCommit([Release Commit]) --> jbVersion[Validates Version] 
     jbVersion --> jbUnitTests[Unit Tests] & jbIntegrationTests[Integration Tests]
     jbUnitTests & jbIntegrationTests --> jbReportCov[Code Coverage Report]
-    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildDocker[Build Docker]
-    jbBuildWheel & jbBuildDocker--> jbEndTests[End-to-End Tests]
+    jbReportCov --> jbBuildWheel[Build Wheel] & jbBuildContainer[Build Container]
+    jbBuildWheel & jbBuildContainer--> jbEndTests[End-to-End Tests]
     jbEndTests --> jbRegressionTests[Regression Tests]
     jbRegressionTests --> taskIntervention([Workflow Pause])
     taskIntervention --> jbPublish[Publish Packages to Registries]
