@@ -39,20 +39,20 @@ jobs:
       - name: Get Change Type
         id: change_type
         run: |
-          if [[ $GITHUB_REF =~ ^/refs/head/([a-z]+)/([0-9]+)_(.*) ]]
+          if [[ $GITHUB_REF =~ ^/refs/head/(feat|fix|bug|chore)/([0-9]+)_(.*) ]]
           then
-              echo ::set-output name=branch_type::pr
-              echo ::set-output name=work_id::${BASH_REMATCH[2]}
-              echo ::set-output name=work_name::${BASH_REMATCH[3]}
-          fi
-          if [[ $GITHUB_REF =~ ^/refs/head/release/v([0-9][0-9a-z._]+) ]]
+            echo ::set-output name=branch_type::pr
+            echo ::set-output name=work_id::${BASH_REMATCH[2]}
+            echo ::set-output name=work_name::${BASH_REMATCH[3]}
+          elif [[ $GITHUB_REF =~ ^/refs/head/release/v([0-9][0-9a-z._]*) ]]
           then
-              echo ::set-output name=branch_type::release
-              echo ::set-output name=work_id::${BASH_REMATCH[1]}
-          fi
-          if [[ $GITHUB_REF == /refs/head/main ]]
+            echo ::set-output name=branch_type::release
+            echo ::set-output name=work_id::${BASH_REMATCH[1]}
+          elif [[ $GITHUB_REF == /refs/head/main ]]
           then
-              echo ::set-output name=branch_type::main
+            echo ::set-output name=branch_type::main
+          else
+            echo "::error title=Invalid Branch Name::Source Branch Names must match a convention matching to following regex: (main|release/v[0-9][0-9._]*|(fix|feat|bug|chore)/[0-9]+_.*)" 
           fi
       - name: Run Work Unit Tests
         if: steps.change_type.outputs.branch_type == 'pr'
