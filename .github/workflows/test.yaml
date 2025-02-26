@@ -39,16 +39,16 @@ jobs:
       - name: Get Change Type
         id: change_type
         run: |
-          if [[ $GITHUB_REF =~ ^/refs/head/(feat|fix|bug|chore)/([0-9]+)_(.*) ]]
+          if [[ $GITHUB_REF =~ ^/refs/head/(feat|fix|bug|chore)/([0-9]+)-(.*) ]]
           then
             echo ::set-output name=branch_type::pr
             echo ::set-output name=work_id::${BASH_REMATCH[2]}
             echo ::set-output name=work_name::${BASH_REMATCH[3]}
-          elif [[ $GITHUB_REF =~ ^/refs/head/release/v([0-9][0-9a-z._]*) ]]
+          elif [[ $GITHUB_REF =~ ^/refs/head/release/v([0-9][0-9a-z.-_]*) ]]
           then
             echo ::set-output name=branch_type::release
             echo ::set-output name=work_id::${BASH_REMATCH[1]}
-          elif [[ $GITHUB_REF == /refs/head/main ]]
+          elif [[ $GITHUB_REF == /refs/head/main ]]s
           then
             echo ::set-output name=branch_type::main
           else
